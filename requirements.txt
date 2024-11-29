@@ -1,0 +1,4 @@
+numpy
+tensorflow
+pyttsx3
+speech_recognition
