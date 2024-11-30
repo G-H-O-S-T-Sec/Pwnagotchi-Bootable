@@ -7,12 +7,12 @@ import random
 import pyttsx3
 import speech_recognition as sr
 import logging
-import nltk
 from transformers import pipeline
 
 # Initialize NLP model for conversational AI
-nltk.download('punkt')
-conversation_pipeline = pipeline('conversational', model='microsoft/DialoGPT-medium')
+
+# Initialize the chatbot model
+chatbot = pipeline("conversational", model="microsoft/DialoGPT-medium")
 
 print("TensorFlow version:", tf.__version__)
 
@@ -108,11 +108,11 @@ class Anon:
 
     def converse(self, user_input):
         # Use NLP model to generate a response
-        response = conversation_pipeline(user_input)[0]['generated_text']
+        response = chatbot(user_input)
         logging.info(f"User: {user_input}")
-        logging.info(f"Anon: {response}")
-        self.speak(response)
-        return response
+        logging.info(f"Anon: {response[0]['generated_text']}")
+        self.speak(response[0]['generated_text'])
+        return response[0]['generated_text']
 
     def remember_user(self, user_id, data):
         # Remember user-specific data
@@ -150,6 +150,8 @@ class Anon:
         elif command in ["recall", "recall user"]:
             user_id = input("Enter user ID: ")
             print(self.recall_user(user_id))
+        elif command in ["chat", "chat with ai"]:
+            self.chat_with_ai()
         else:
             self.speak("I'm not sure how to respond to that.")
 
@@ -185,6 +187,15 @@ class Anon:
         except sr.RequestError:
             print("Speech recognition service is unavailable.")
             return None
+
+    def chat_with_ai(self):
+        print("Start chatting with the AI (type 'exit' to stop):")
+        while True:
+            user_input = input("You: ")
+            if user_input.lower() == 'exit':
+                break
+            response = chatbot(user_input)
+            print(f"AI: {response[0]['generated_text']}")
 
 def launch():
     # Initialize Anon instance
