@@ -13,6 +13,7 @@ fi
 SD_CARD=$1
 BUILD_DIR="build"
 TEMP_DIR="/tmp/anon_build"
+MOUNT_POINT="/mnt"
 
 if [ -z "$SD_CARD" ]; then
     echo "Usage: $0 /dev/sdX (replace X with your SD card device letter)"
@@ -69,6 +70,11 @@ EOL
 cp build_scripts/optimize.sh /mnt/rootfs/root/
 cp build_scripts/install.sh /mnt/rootfs/root/
 
+# Copy setup scripts to boot partition
+mkdir -p "${MOUNT_POINT}/boot/setup"
+cp setup_pwnagotchi.sh "${MOUNT_POINT}/boot/setup/"
+chmod +x "${MOUNT_POINT}/boot/setup/setup_pwnagotchi.sh"
+
 # Create first boot script
 cat > /mnt/rootfs/root/first_boot.sh << EOL
 #!/bin/bash
@@ -98,6 +104,17 @@ chmod +x /mnt/rootfs/root/first_boot.sh
 sed -i 's/exit 0//' /mnt/rootfs/etc/rc.local
 echo "/root/first_boot.sh" >> /mnt/rootfs/etc/rc.local
 echo "exit 0" >> /mnt/rootfs/etc/rc.local
+
+# Add setup script to rc.local to run on first boot
+cat > "${MOUNT_POINT}/etc/rc.local" << EOL
+#!/bin/sh -e
+if [ -f /boot/setup/setup_pwnagotchi.sh ]; then
+    /boot/setup/setup_pwnagotchi.sh
+    rm -f /boot/setup/setup_pwnagotchi.sh
+fi
+exit 0
+EOL
+chmod +x "${MOUNT_POINT}/etc/rc.local"
 
 # Copy source files
 mkdir -p /mnt/rootfs/opt/anon

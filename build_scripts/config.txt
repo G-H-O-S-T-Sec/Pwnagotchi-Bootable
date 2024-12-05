@@ -16,8 +16,9 @@ dtparam=pwr_led_activelow=off
 dtoverlay=disable-wifi
 dtoverlay=disable-bt
 
-# Enable wifi only when needed (controlled by software)
-dtoverlay=disable-wifi,poll_once=true
+# Enable WiFi (required for Pwnagotchi)
+dtoverlay=disable-wifi=off
+dtparam=ant2
 
 # Minimize boot time
 boot_delay=0
