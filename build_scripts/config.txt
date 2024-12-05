@@ -1,0 +1,39 @@
+# Minimize power usage and optimize for stealth
+arm_freq=700
+gpu_freq=200
+core_freq=200
+sdram_freq=300
+over_voltage=-2
+
+# Disable unused features
+dtparam=audio=off
+dtparam=act_led_trigger=none
+dtparam=act_led_activelow=off
+dtparam=pwr_led_trigger=none
+dtparam=pwr_led_activelow=off
+
+# Minimize RF emissions
+dtoverlay=disable-wifi
+dtoverlay=disable-bt
+
+# Enable wifi only when needed (controlled by software)
+dtoverlay=disable-wifi,poll_once=true
+
+# Minimize boot time
+boot_delay=0
+initial_turbo=1
+
+# Disable HDMI to save power
+hdmi_blanking=2
+hdmi_force_hotplug=0
+hdmi_drive=1
+
+# GPU memory split (minimum for headless operation)
+gpu_mem=16
+
+# Enable hardware-based encryption if available
+dtoverlay=encryption
+
+# Temperature control
+temp_limit=70
+temp_soft_limit=60

@@ -1,0 +1,23 @@
+# Build directories
+build/
+.vscode/
+
+# OS images
+*.img
+*.img.xz
+
+# Compiled files
+*.o
+*.so
+*.a
+*.pyc
+__pycache__/
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# System files
+.DS_Store
+Thumbs.db
